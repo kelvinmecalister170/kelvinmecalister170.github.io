@@ -8,17 +8,17 @@ from sklearn.metrics import accuracy_score, confusion_matrix, mean_squared_error
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Konfigurasi awal
+
 st.set_page_config(page_title="Data Mining CSV App", layout="wide")
 st.markdown("<h1 style='text-align: center;'>📘 Aplikasi Data Mining: Klasifikasi & Regresi</h1>", unsafe_allow_html=True)
 st.markdown("---")
 
-# Upload File
+
 with st.sidebar:
     st.header("📂 Upload Dataset")
     uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])
 
-# Main logic
+
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
     st.subheader("👁️‍🗨️ Preview Data")
@@ -27,11 +27,11 @@ if uploaded_file:
     st.sidebar.header("⚙️ Konfigurasi Kolom")
     all_columns = df.columns.tolist()
 
-    # Pilih target dan fitur
+   
     target = st.sidebar.selectbox("🎯 Pilih Target", all_columns)
     fitur = st.sidebar.multiselect("🧩 Pilih Fitur", [c for c in all_columns if c != target], default=[c for c in all_columns if c != target][:5])
 
-    # Pilih algoritma
+    
     algoritma = st.sidebar.selectbox("📌 Pilih Algoritma", ["Regresi Logistik", "Regresi Linier"])
 
     if fitur and target:
@@ -39,12 +39,12 @@ if uploaded_file:
         X = df_model[fitur]
         y = df_model[target]
 
-        # Encode fitur (jika string)
+        
         for col in X.columns:
             if X[col].dtype == 'object':
                 X[col] = LabelEncoder().fit_transform(X[col].astype(str))
 
-        # Encode target jika perlu
+        
         label_info = None
         if y.dtype == 'object':
             le_y = LabelEncoder()
@@ -56,9 +56,9 @@ if uploaded_file:
         # Split data
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        # ==============================
-        # LOGISTIC REGRESSION
-        # ==============================
+        
+        
+       
         if algoritma == "Regresi Logistik":
             unique_classes = np.unique(y)
             if len(unique_classes) != 2:
@@ -82,9 +82,7 @@ if uploaded_file:
                 ax.set_title("Confusion Matrix")
                 st.pyplot(fig)
 
-        # ==============================
-        # LINEAR REGRESSION
-        # ==============================
+     
         elif algoritma == "Regresi Linier":
             model = LinearRegression()
             model.fit(X_train, y_train)
